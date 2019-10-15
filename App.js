@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button, TouchableOpacity, Image } from 'react-n
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
+import AddReview from "./components/AddReview"
 
 export default function App() {
 
@@ -14,6 +15,7 @@ export default function App() {
     longitudeDelta: 0.0421
   });
   const [restaurants, setRestaurants] = useState([]);
+  const [modalMode, setModalMode] = useState(false)
 
   useEffect(() => {
     _getLocationAsync();
@@ -56,13 +58,19 @@ export default function App() {
       )
   )
 
+  const submitReview = () => {
+    setModalMode(false)
+
+  }
+
   return (
     <View style={styles.screen}>
       <MapView style={styles.map} region={region} showsUserLocation={true} showsMyLocationButton={true} >
       {markers}
       </MapView>
       <View style={styles.overlay}>
-        <TouchableOpacity>
+      <AddReview visible={modalMode} submitReview={submitReview}/>
+        <TouchableOpacity onPress={() => setModalMode(true)} >
           <Image 
             source={require("./images/rate.png")}
           />
