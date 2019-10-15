@@ -1,21 +1,19 @@
 import React, {useState, useEffect }  from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 
 export default function App() {
 
   const [permission, setPermission] = useState(false);
-  const [lattitude, setLatitude] = useState()
-  const [longitude, setLongitude] = useState()
   const [region, setRegion] = useState({
     latitude: 16.704070,
     longitude: -2.411928,
     latitudeDelta: 0.0922, 
     longitudeDelta: 0.0421
   });
-
+  const [restaurants, setRestaurants] = useState([]);
 
   useEffect(() => {
     _getLocationAsync();
@@ -26,22 +24,44 @@ export default function App() {
     setPermission(status === 'granted');
   
     let location = await Location.getCurrentPositionAsync({});
-    setLatitude(location.coords.latitude);
-    setLongitude(location.coords.longitude);
+
+    const latitude = location.coords.latitude;
+    const longitude = location.coords.longitude
+    // refactor 
     setRegion(
-      { latitude: location.coords.latitude, 
-        longitude: location.coords.longitude, 
+      { latitude: latitude,
+        longitude: longitude, 
         latitudeDelta: 0.0922, 
         longitudeDelta: 0.0421
       }
     )
+
+    const restsRaw = await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/restaurants/${latitude}/${longitude}`, {
+      method: "GET"
+    });
+    const currentRests = await restsRaw.json();
+    setRestaurants(currentRests);
+    
   };
 
+  const markers = restaurants.map(rest => (
+    <Marker
+      key={rest.googleId}
+      coordinate={{
+        latitude: rest.latitude,
+        longitude: rest.longitude
+      }}
+      title={"title"}
+      description={"description"} />
+      )
+  )
 
   return (
-    <MapView style={styles.map} region={region}/>
-  );
-}
+    <MapView style={styles.map} region={region} showsUserLocation={true} showsMyLocationButton={true} >
+    {markers}
+    </MapView>
+  )
+};
 
 const styles = StyleSheet.create({
   // container: {
