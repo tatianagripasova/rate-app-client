@@ -1,5 +1,5 @@
 import React, {useState, useEffect }  from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button, TouchableOpacity, Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
@@ -57,21 +57,46 @@ export default function App() {
   )
 
   return (
-    <MapView style={styles.map} region={region} showsUserLocation={true} showsMyLocationButton={true} >
-    {markers}
-    </MapView>
+    <View style={styles.screen}>
+      <MapView style={styles.map} region={region} showsUserLocation={true} showsMyLocationButton={true} >
+      {markers}
+      </MapView>
+      <View style={styles.overlay}>
+        <TouchableOpacity>
+          <Image 
+            source={require("./images/rate.png")}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Image 
+            source={require("./images/find.png")}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
   )
 };
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   backgroundColor: '#fff',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
-  map: {
+  screen: {
     flex: 1
+  },
+  map: {
+    flex: 1, 
+    zIndex: -1
+  }, 
+  overlay: {
+    position: "absolute", 
+    flexDirection: "row", 
+    justifyContent: "space-around",
+    alignItems: "center",
+    width: "100%",
+    bottom: 150
+  },
+  button: {
+    width: 50, 
+    height: 20, 
+    fontSize: 150
   }
 });
 
