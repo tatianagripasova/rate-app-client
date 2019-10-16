@@ -1,44 +1,28 @@
 import React, {useState, useEffect }  from 'react';
-import { StyleSheet, Text, View, Button, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import * as Location from 'expo-location';
-import * as Permissions from 'expo-permissions';
-import AddReview from "./components/AddReview"
+
+import AddReview from "./components/AddReview";
+import ImageButton from "./components/ImageButton";
+import { defaultRegion, getLocationAsync } from "./utils/geolocation";
 
 export default function App() {
-
   const [permission, setPermission] = useState(false);
-  const [region, setRegion] = useState({
-    latitude: 16.704070,
-    longitude: -2.411928,
-    latitudeDelta: 0.0922, 
-    longitudeDelta: 0.0421
-  });
+  const [region, setRegion] = useState(defaultRegion);
+
   const [restaurants, setRestaurants] = useState([]);
   const [modalMode, setModalMode] = useState(false)
 
   useEffect(() => {
-    _getLocationAsync();
+    getLocationAndRests();
   }, [])
 
-  _getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    setPermission(status === 'granted');
-  
-    let location = await Location.getCurrentPositionAsync({});
+  getLocationAndRests = async () => {
+    const { region, status } = await getLocationAsync();
+    setRegion(region);
+    setPermission(status);
 
-    const latitude = location.coords.latitude;
-    const longitude = location.coords.longitude
-    // refactor 
-    setRegion(
-      { latitude: latitude,
-        longitude: longitude, 
-        latitudeDelta: 0.0922, 
-        longitudeDelta: 0.0421
-      }
-    )
-
-    const restsRaw = await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/restaurants/${latitude}/${longitude}`, {
+    const restsRaw = await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/restaurants/${region.latitude}/${region.longitude}`, {
       method: "GET"
     });
     const currentRests = await restsRaw.json();
@@ -56,12 +40,16 @@ export default function App() {
       title={"title"}
       description={"description"} />
       )
-  )
+  );
 
   const submitReview = () => {
     setModalMode(false)
+  };
 
-  }
+  const hideReviewModal = () => {
+    setModalMode(false)
+  };
+
 
   return (
     <View style={styles.screen}>
@@ -69,17 +57,14 @@ export default function App() {
       {markers}
       </MapView>
       <View style={styles.overlay}>
-      <AddReview visible={modalMode} submitReview={submitReview}/>
-        <TouchableOpacity onPress={() => setModalMode(true)} >
-          <Image 
-            source={require("./images/rate.png")}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Image 
-            source={require("./images/find.png")}
-          />
-        </TouchableOpacity>
+        <AddReview visible={modalMode} submitReview={submitReview} hideReviewModal={hideReviewModal}/>
+        <ImageButton 
+          source={require("./images/rate.png")}
+          onPress={() => setModalMode(true)}
+        />
+        <ImageButton 
+          source={require("./images/find.png")}
+        />
       </View>
     </View>
   )
