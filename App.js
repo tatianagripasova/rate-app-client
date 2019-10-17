@@ -11,7 +11,8 @@ export default function App() {
   const [region, setRegion] = useState(defaultRegion);
 
   const [restaurants, setRestaurants] = useState([]);
-  const [modalMode, setModalMode] = useState(false)
+  const [modalMode, setModalMode] = useState(false);
+  const[ currentRest, setCurrentRest] = useState({});
 
   useEffect(() => {
     getLocationAndRests();
@@ -32,6 +33,9 @@ export default function App() {
 
   const markers = restaurants.map(rest => (
     <Marker
+      onPress={() => {
+        setCurrentRest(rest);
+      }}
       key={rest.googleId}
       coordinate={{
         latitude: rest.latitude,
@@ -42,9 +46,21 @@ export default function App() {
       )
   );
 
-  const submitReview = () => {
-    setModalMode(false)
+  const submitReview = async (review) => {
+    setModalMode(false);
+    await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/review`, {
+      method: "POST",
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        review, 
+        restaurant: currentRest
+      })
+    })
   };
+
 
   const hideReviewModal = () => {
     setModalMode(false)

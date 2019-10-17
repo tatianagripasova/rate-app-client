@@ -4,26 +4,45 @@ import Modal from "react-native-modal";
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import ImageButton from "../components/ImageButton"
 
-
+const DEFAULT_RATING = 4;
 
 const AddReview = props => {
-    const [addedReview, setReview] = useState(""); 
+    const [description, setDescription] = useState("");
+    const [rating, setRating]= useState(DEFAULT_RATING);
+
+    const addDescriptionHandler = inputValue => {
+        setDescription(inputValue);
+    };
+
+    const onFinishRating = stars => {
+        setRating(stars)
+    };
+
+    const submitForm = async() => {
+        const review = {
+            rating, 
+            description
+        }
+        await props.submitReview(review);
+        setDescription("");
+        setRating(DEFAULT_RATING);
+    }
 
     return (
-        <Modal  style={styles.modal} isVisible={props.visible} >
+        <Modal style={styles.modal} isVisible={props.visible} >
             <View style={styles.header}>
                 <Text style={styles.text}>Russian Tea</Text>
             </View>
-            <AirbnbRating />
+            <AirbnbRating defaultRating={DEFAULT_RATING}  onFinishRating={onFinishRating}/>
             <View style={styles.inputContainer}>
                     <TextInput
                         placeholder="Text review here" 
                         style={styles.input} 
-                        // onChangeText={}
-                        // value={}
+                        onChangeText={addDescriptionHandler}
+                        value={description}
                     />
             </View>
-                <ImageButton style={styles.submitButton} onPress={() => {props.submitReview()}}
+                <ImageButton style={styles.submitButton} onPress={submitForm}
                   source={require("../images/submit.png")}
                 />
                 <ImageButton style={styles.cancelButton} imageStyle={styles.cancelButtonImage}
