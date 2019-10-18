@@ -17,6 +17,7 @@
     "react-native-maps": "~0.25.0",
     "react-native-modal": "^11.4.0",
     "react-native-ratings": "^6.5.0",
+    "react-native-simple-radio-button": "^2.7.4",
     "react-native-web": "^0.11.7"
   },
   "devDependencies": {

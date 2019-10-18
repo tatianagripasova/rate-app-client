@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View, TextInput, Button, StyleSheet } from "react-native";
+import { Text, View, TextInput, StyleSheet } from "react-native";
 import Modal from "react-native-modal";
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import ImageButton from "../components/ImageButton"
@@ -31,7 +31,7 @@ const AddReview = props => {
     return (
         <Modal style={styles.modal} isVisible={props.visible} >
             <View style={styles.header}>
-                <Text style={styles.text}>Russian Tea</Text>
+                <Text style={styles.text}>{props.name}</Text>
             </View>
             <AirbnbRating defaultRating={DEFAULT_RATING}  onFinishRating={onFinishRating}/>
             <View style={styles.inputContainer}>
@@ -80,14 +80,10 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     submitButton: {
-        top: 100,
-        alignItems: "center", 
-        justifyContent: "center"
+        top: 100
     }, 
     cancelButton: {
-        top: 50,
-        alignItems: "center", 
-        justifyContent: "center"
+        top: 50
     },
     cancelButtonImage: {
         width: 60,

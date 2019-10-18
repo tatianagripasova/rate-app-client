@@ -3,8 +3,10 @@ import { StyleSheet, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 import AddReview from "./components/AddReview";
+import FilterRestaurants from "./components/FilterResturants";
 import ImageButton from "./components/ImageButton";
 import { defaultRegion, getLocationAsync } from "./utils/geolocation";
+import { radioRests, radioPrices } from "./utils/filter";
 
 export default function App() {
   const [permission, setPermission] = useState(false);
@@ -12,7 +14,13 @@ export default function App() {
 
   const [restaurants, setRestaurants] = useState([]);
   const [modalMode, setModalMode] = useState(false);
-  const[ currentRest, setCurrentRest] = useState({});
+  const [filterModalMode, setFilterModalMode] = useState(true);
+
+  const [currentRest, setCurrentRest] = useState({});
+  const [filters, setFilters] = useState({
+    cuisine: 0, 
+    price: 1
+  });
 
   useEffect(() => {
     getLocationAndRests();
@@ -23,12 +31,11 @@ export default function App() {
     setRegion(region);
     setPermission(status);
 
-    const restsRaw = await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/restaurants/${region.latitude}/${region.longitude}`, {
+    const restsRaw = await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/restaurants/${region.latitude}/${region.longitude}/${radioRests[filters.cuisine]}/${radioPrices[filters.price]}`, {
       method: "GET"
     });
     const currentRests = await restsRaw.json();
     setRestaurants(currentRests);
-    
   };
 
   const markers = restaurants.map(rest => (
@@ -41,7 +48,7 @@ export default function App() {
         latitude: rest.latitude,
         longitude: rest.longitude
       }}
-      title={"title"}
+      title={rest.name}
       description={"description"} />
       )
   );
@@ -61,11 +68,18 @@ export default function App() {
     })
   };
 
+  const applyFilters = (settings) => {
+    setFilters(settings);
+    setFilterModalMode(false);
+  }
 
   const hideReviewModal = () => {
     setModalMode(false)
   };
 
+  const hideFilterModal = () => {
+    setFilterModalMode(false)
+  };
 
   return (
     <View style={styles.screen}>
@@ -73,13 +87,15 @@ export default function App() {
       {markers}
       </MapView>
       <View style={styles.overlay}>
-        <AddReview visible={modalMode} submitReview={submitReview} hideReviewModal={hideReviewModal}/>
+        <FilterRestaurants visible={filterModalMode} applyFilters={applyFilters} hideFilterModal={hideFilterModal} filters={filters}/>
+        <AddReview visible={modalMode} name={currentRest.name} submitReview={submitReview} hideReviewModal={hideReviewModal}/>
         <ImageButton 
           source={require("./images/rate.png")}
           onPress={() => setModalMode(true)}
         />
         <ImageButton 
           source={require("./images/find.png")}
+          onPress={() => setFilterModalMode(true)}
         />
       </View>
     </View>
