@@ -23,14 +23,20 @@ export default function App() {
   });
 
   useEffect(() => {
-    getLocationAndRests();
+    getLocation();
   }, [])
 
-  getLocationAndRests = async () => {
+  useEffect(() => {
+    getRests();
+  }, [region, filters])
+
+  getLocation = async () => {
     const { region, status } = await getLocationAsync();
     setRegion(region);
     setPermission(status);
+  };
 
+  getRests = async () => {
     const restsRaw = await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/restaurants/${region.latitude}/${region.longitude}/${radioRests[filters.cuisine]}/${radioPrices[filters.price]}`, {
       method: "GET"
     });
@@ -81,9 +87,13 @@ export default function App() {
     setFilterModalMode(false)
   };
 
+  const onRegionChange = (newRegion) => {
+    setRegion(newRegion)
+  };
+
   return (
     <View style={styles.screen}>
-      <MapView style={styles.map} region={region} showsUserLocation={true} showsMyLocationButton={true} >
+      <MapView style={styles.map} region={region} onRegionChange={onRegionChange} showsUserLocation={true} showsMyLocationButton={true} >
       {markers}
       </MapView>
       <View style={styles.overlay}>

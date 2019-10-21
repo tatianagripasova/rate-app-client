@@ -26,10 +26,11 @@ const FilterRestaurants = props => {
     ));
 
     const applyFilters = () => {
-        props.applyFilters({
+        const settings = {
             cuisine,
             price
-        })
+        };
+        props.applyFilters(settings);
     };
 
     return (
