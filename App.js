@@ -19,7 +19,7 @@ export default function App() {
   const [filterModalMode, setFilterModalMode] = useState(false);
   const [restaurantModalMode, setRestaurantModalMode] = useState(false);
 
-  const [currentRest, setCurrentRest] = useState({});
+  const [currentRest, setCurrentRest] = useState({ reviews: [] });
   const [filters, setFilters] = useState({
     cuisine: 0, 
     price: 3
@@ -58,6 +58,7 @@ export default function App() {
 
   const markers = restaurants.map(rest => (
     <Marker
+      image={require("./images/cancel.png")}
       onPress={() => {
         setCurrentRest(rest);
       }}
@@ -67,7 +68,7 @@ export default function App() {
         longitude: rest.longitude
       }}
       title={rest.name}
-      description={"description"} 
+      description={`${rest.userRating ? 'Your' : 'Google'} rating: ${rest.userRating || rest.rating}`} 
       onCalloutPress={() => {
         setRestaurantModalMode(true);
       }}
@@ -155,10 +156,6 @@ export default function App() {
           hideRestaurantModal={hideRestaurantModal}
           openRateModalMode={openRateModalMode}
           onModalHide={onModalHide}
-        />
-        <ImageButton 
-          source={require("./images/rate.png")}
-          onPress={() => { setRateModalMode(true); }}
         />
         <ImageButton 
           source={require("./images/find.png")}

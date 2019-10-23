@@ -1,9 +1,15 @@
 import React from "react";
-import { View, StyleSheet, Text}  from "react-native";
+import { View, StyleSheet, Text, ScrollView}  from "react-native";
 import Modal from "react-native-modal";
 import ImageButton from "./ImageButton";
+import Card from "../components/Card";
+import Header from "../components/Header";
+import { Rating } from "react-native-ratings";
 
 const Restaurant = props => {
+    const Review = props.restaurant.reviews.sort((a,b) => b.id - a.id).map(rev => (
+        <Card key={rev.id} rev={rev} />
+    ));
     return (
         <Modal 
             onModalHide={props.onModalHide}
@@ -17,9 +23,13 @@ const Restaurant = props => {
                 <Text style={styles.text}>{props.restaurant.name}</Text>
             </View>
             <View>
-                <Text>Google Rating: {props.restaurant.rating}</Text>
-                <Text>Your Rating:{props.restaurant.userRating || 'Not rated'}</Text>
+                <Text style={styles.textRating}>Google Rating: {props.restaurant.rating}</Text>
+                <Text style={styles.textRating}>Your Rating: {props.restaurant.userRating || 'Not rated'}</Text>
             </View>
+            <Header title="Your Rating" />
+            <ScrollView>
+               {Review} 
+            </ScrollView>
             <ImageButton 
                 source={require("../images/rate.png")}
                 onPress={props.openRateModalMode}
@@ -37,6 +47,10 @@ const styles = StyleSheet.create({
     modal: {
         flex: 1, 
         alignItems: "center"
+    },
+    textRating: {
+        fontSize: 18, 
+        margin: 5
     }, 
     header: {
         width: "100%", 
@@ -55,6 +69,9 @@ const styles = StyleSheet.create({
     cancelButtonImage: {
         width: 60,
         height: 60
+    }, 
+    scrollView: {
+        width: "100%"
     }
 });
 

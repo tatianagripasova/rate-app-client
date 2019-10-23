@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Button }  from "react-native";
+import { View, StyleSheet }  from "react-native";
 import Modal from "react-native-modal";
 import RadioForm from "react-native-simple-radio-button";
 import Header from "./Header";
