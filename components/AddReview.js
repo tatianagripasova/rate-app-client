@@ -20,7 +20,7 @@ const AddReview = props => {
 
     const submitForm = async() => {
         const review = {
-            rating, 
+            rate: rating, 
             description
         }
         await props.submitReview(review);

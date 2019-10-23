@@ -7,8 +7,8 @@ import ImageButton from "./ImageButton";
 import { radioRests, radioPrices } from "../utils/filter";
 
 const FilterRestaurants = props => {
-    const [cuisine, setCuisine] = useState("");
-    const [price, setPrice] = useState("");
+    const [cuisine, setCuisine] = useState(props.filters.cuisine);
+    const [price, setPrice] = useState(props.filters.price);
 
     const choosingCuisine = type => {
         setCuisine(type)
@@ -39,7 +39,7 @@ const FilterRestaurants = props => {
         <View>
             <RadioForm
             radio_props={radio_rests}
-            initial={props.filters.cuisine}
+            initial={cuisine}
             animation={true}
             onPress={choosingCuisine}
             labelStyle={{ fontSize: 20, color: "black", margin: 10}}
@@ -49,7 +49,7 @@ const FilterRestaurants = props => {
         <View style={styles.formRests}>
         <RadioForm
             radio_props={radio_prices}
-            initial={props.filters.price}
+            initial={price}
             formHorizontal={true}
             animation={true}
             onPress={choosingPricing}
@@ -74,8 +74,7 @@ styles = StyleSheet.create({
     }, 
     formRests: {
         flex: 1,
-        flexDirection: "row", 
-
+        flexDirection: "row",
     },
     submitButton: {
         bottom: 50

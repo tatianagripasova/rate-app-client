@@ -4,6 +4,7 @@ import MapView, { Marker } from 'react-native-maps';
 
 import AddReview from "./components/AddReview";
 import FilterRestaurants from "./components/FilterResturants";
+import Restaurant from "./components/Restaurant";
 import ImageButton from "./components/ImageButton";
 import { defaultRegion, getLocationAsync } from "./utils/geolocation";
 import { radioRests, radioPrices } from "./utils/filter";
@@ -13,13 +14,15 @@ export default function App() {
   const [region, setRegion] = useState(defaultRegion);
 
   const [restaurants, setRestaurants] = useState([]);
-  const [modalMode, setModalMode] = useState(false);
-  const [filterModalMode, setFilterModalMode] = useState(true);
+  const [rateModalMode, setRateModalMode] = useState(false);
+  const [realRateModalMode, setRealRateModalMode] = useState(false);
+  const [filterModalMode, setFilterModalMode] = useState(false);
+  const [restaurantModalMode, setRestaurantModalMode] = useState(false);
 
   const [currentRest, setCurrentRest] = useState({});
   const [filters, setFilters] = useState({
     cuisine: 0, 
-    price: 1
+    price: 3
   });
 
   useEffect(() => {
@@ -30,6 +33,15 @@ export default function App() {
     getRests();
   }, [region, filters])
 
+  useEffect(() => {
+    if (Object.keys(currentRest).length && restaurants.length) {
+      const newCurrentRest = restaurants.find(r => r.googleId === currentRest.googleId);
+      if (newCurrentRest) {
+        setCurrentRest(newCurrentRest);
+      }
+    }
+  }, [restaurants])
+
   getLocation = async () => {
     const { region, status } = await getLocationAsync();
     setRegion(region);
@@ -37,7 +49,7 @@ export default function App() {
   };
 
   getRests = async () => {
-    const restsRaw = await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/restaurants/${region.latitude}/${region.longitude}/${radioRests[filters.cuisine]}/${radioPrices[filters.price]}`, {
+    const restsRaw = await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/restaurants/${region.latitude}/${region.longitude}/${radioRests[filters.cuisine]}/${filters.price + 1}`, {
       method: "GET"
     });
     const currentRests = await restsRaw.json();
@@ -55,12 +67,17 @@ export default function App() {
         longitude: rest.longitude
       }}
       title={rest.name}
-      description={"description"} />
-      )
-  );
+      description={"description"} 
+      onCalloutPress={() => {
+        setRestaurantModalMode(true);
+      }}
+      pointerEvents="auto"
+      />
+    ));
 
   const submitReview = async (review) => {
-    setModalMode(false);
+    setRateModalMode(false);
+    setRealRateModalMode(false);
     await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/review`, {
       method: "POST",
       headers: {
@@ -72,6 +89,7 @@ export default function App() {
         restaurant: currentRest
       })
     })
+    getRests();
   };
 
   const applyFilters = (settings) => {
@@ -80,32 +98,71 @@ export default function App() {
   }
 
   const hideReviewModal = () => {
-    setModalMode(false)
+    setRateModalMode(false);
+    setRealRateModalMode(false);
   };
 
   const hideFilterModal = () => {
     setFilterModalMode(false)
   };
 
-  const onRegionChange = (newRegion) => {
+  const hideRestaurantModal = () => {
+    setRestaurantModalMode(false)
+  };
+
+  const onRegionChangeComplete = (newRegion) => {
     setRegion(newRegion)
   };
 
+  const openRateModalMode = () => {
+    setRestaurantModalMode(false);
+    setRateModalMode(true); 
+  };
+
+  const onModalHide = () => {
+    if (rateModalMode) {
+      setRealRateModalMode(true);
+    }
+  }
+
   return (
     <View style={styles.screen}>
-      <MapView style={styles.map} region={region} onRegionChange={onRegionChange} showsUserLocation={true} showsMyLocationButton={true} >
+      <MapView 
+        style={styles.map}
+        region={region} 
+        onRegionChangeComplete={onRegionChangeComplete} 
+        showsUserLocation={true} 
+        showsMyLocationButton={true} 
+      >
       {markers}
       </MapView>
       <View style={styles.overlay}>
-        <FilterRestaurants visible={filterModalMode} applyFilters={applyFilters} hideFilterModal={hideFilterModal} filters={filters}/>
-        <AddReview visible={modalMode} name={currentRest.name} submitReview={submitReview} hideReviewModal={hideReviewModal}/>
+        <FilterRestaurants
+          visible={filterModalMode} 
+          applyFilters={applyFilters} 
+          hideFilterModal={hideFilterModal} 
+          filters={filters}
+        />
+        <AddReview 
+          visible={realRateModalMode} 
+          name={currentRest.name} 
+          submitReview={submitReview} 
+          hideReviewModal={hideReviewModal}
+        />
+        <Restaurant 
+          visible={restaurantModalMode}
+          restaurant={currentRest}
+          hideRestaurantModal={hideRestaurantModal}
+          openRateModalMode={openRateModalMode}
+          onModalHide={onModalHide}
+        />
         <ImageButton 
           source={require("./images/rate.png")}
-          onPress={() => setModalMode(true)}
+          onPress={() => { setRateModalMode(true); }}
         />
         <ImageButton 
           source={require("./images/find.png")}
-          onPress={() => setFilterModalMode(true)}
+          onPress={() => { setFilterModalMode(true); }}
         />
       </View>
     </View>
