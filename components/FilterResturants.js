@@ -67,7 +67,7 @@ const FilterRestaurants = props => {
     )
 };
 
-styles = StyleSheet.create({
+const styles = StyleSheet.create({
     modal: {
         flex: 1, 
         alignItems: "center"
