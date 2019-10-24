@@ -1,8 +1,13 @@
-import React from "react"
-import { View, StyleSheet, Button, Text } from "react-native"
+import React, { useContext }  from "react"
+import { View, StyleSheet, Text } from "react-native"
 import ImageButton from "./ImageButton";
+import ReviewContext from "../context/review-context";
 
 const Card = props => {
+    const { deleteReview } = useContext(ReviewContext);
+    const deleteRev = () => {
+        deleteReview(props.rev.id)
+    };
     return(
         <View style={{...styles.card, ...props.style}}>
             <Text style={styles.rating}>{props.rev.rate}</Text>
@@ -12,6 +17,7 @@ const Card = props => {
                     source={require("../images/cancel.png")}
                     imageStyle={styles.cancelButtonImage}
                     title="remove"
+                    onPress={deleteRev}
                 />
             </View>
         </View>

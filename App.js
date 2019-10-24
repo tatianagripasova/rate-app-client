@@ -1,4 +1,4 @@
-import React, {useState, useEffect }  from 'react';
+import React, {useState, useEffect, useContext }  from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
@@ -6,6 +6,7 @@ import AddReview from "./components/AddReview";
 import FilterRestaurants from "./components/FilterResturants";
 import Restaurant from "./components/Restaurant";
 import ImageButton from "./components/ImageButton";
+import ReviewContext from "./context/review-context";
 import { defaultRegion, getLocationAsync } from "./utils/geolocation";
 import { radioRests, radioPrices } from "./utils/filter";
 
@@ -90,7 +91,18 @@ export default function App() {
         restaurant: currentRest
       })
     })
-    getRests();
+    await getRests();
+  };
+
+  const deleteReview = async (revId) => {
+    await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/review/${revId}`, {
+      method: "DELETE",
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    await getRests();
   };
 
   const applyFilters = (settings) => {
@@ -150,13 +162,15 @@ export default function App() {
           submitReview={submitReview} 
           hideReviewModal={hideReviewModal}
         />
-        <Restaurant 
-          visible={restaurantModalMode}
-          restaurant={currentRest}
-          hideRestaurantModal={hideRestaurantModal}
-          openRateModalMode={openRateModalMode}
-          onModalHide={onModalHide}
-        />
+        <ReviewContext.Provider value={{deleteReview}}>
+          <Restaurant 
+            visible={restaurantModalMode}
+            restaurant={currentRest}
+            hideRestaurantModal={hideRestaurantModal}
+            openRateModalMode={openRateModalMode}
+            onModalHide={onModalHide}
+          />
+        </ReviewContext.Provider>
         <ImageButton 
           source={require("./images/find.png")}
           onPress={() => { setFilterModalMode(true); }}
