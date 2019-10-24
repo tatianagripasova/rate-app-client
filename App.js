@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useContext }  from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import DialogInput from 'react-native-dialog-input';
 
 import AddReview from "./components/AddReview";
 import FilterRestaurants from "./components/FilterResturants";
@@ -12,6 +13,9 @@ import { radioRests, radioPrices } from "./utils/filter";
 
 export default function App() {
   const [permission, setPermission] = useState(false);
+  const [emailDialog, setEmailDialog] = useState(true);
+  const [user, setUser] = useState("");
+ 
   const [region, setRegion] = useState(defaultRegion);
 
   const [restaurants, setRestaurants] = useState([]);
@@ -32,7 +36,7 @@ export default function App() {
 
   useEffect(() => {
     getRests();
-  }, [region, filters])
+  }, [region, filters, user])
 
   useEffect(() => {
     if (Object.keys(currentRest).length && restaurants.length) {
@@ -50,11 +54,15 @@ export default function App() {
   };
 
   getRests = async () => {
-    const restsRaw = await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/restaurants/${region.latitude}/${region.longitude}/${radioRests[filters.cuisine]}/${filters.price + 1}`, {
-      method: "GET"
-    });
-    const currentRests = await restsRaw.json();
-    setRestaurants(currentRests);
+    if (user) {
+      const restsRaw = await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/restaurants/${region.latitude}/${region.longitude}/${radioRests[filters.cuisine]}/${filters.price + 1}`, {
+        method: "GET"
+      });
+      const currentRests = await restsRaw.json();
+      setRestaurants(currentRests);
+    } else {
+      setEmailDialog(true);
+    }
   };
 
   const markers = restaurants.map(rest => (
@@ -105,6 +113,11 @@ export default function App() {
     await getRests();
   };
 
+  const submitEmailInput = (inputText) => {
+    setUser(inputText);
+    setEmailDialog(false); 
+  };
+
   const applyFilters = (settings) => {
     setFilters(settings);
     setFilterModalMode(false);
@@ -136,10 +149,17 @@ export default function App() {
     if (rateModalMode) {
       setRealRateModalMode(true);
     }
-  }
+  };
 
   return (
     <View style={styles.screen}>
+      <DialogInput 
+        isDialogVisible={emailDialog}
+        title={"Please enter your email"}
+        submitInput={submitEmailInput}
+        closeDialog={() => {setEmailDialog(false)}}
+      >
+      </DialogInput>
       <MapView 
         style={styles.map}
         region={region} 
@@ -173,7 +193,7 @@ export default function App() {
         </ReviewContext.Provider>
         <ImageButton 
           source={require("./images/find.png")}
-          onPress={() => { setFilterModalMode(true); }}
+          onPress={() => { user ? setFilterModalMode(true) : setEmailDialog(true); }}
         />
       </View>
     </View>
