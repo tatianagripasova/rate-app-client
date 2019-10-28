@@ -56,7 +56,10 @@ export default function App() {
   getRests = async () => {
     if (user) {
       const restsRaw = await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/restaurants/${region.latitude}/${region.longitude}/${radioRests[filters.cuisine]}/${filters.price + 1}`, {
-        method: "GET"
+        method: "GET",
+        headers: {
+          "App-User": user
+        }
       });
       const currentRests = await restsRaw.json();
       setRestaurants(currentRests);
@@ -93,6 +96,7 @@ export default function App() {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        'App-User': user
       },
       body: JSON.stringify({
         review, 
@@ -107,7 +111,8 @@ export default function App() {
       method: "DELETE",
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'App-User': user
       }
     })
     await getRests();
