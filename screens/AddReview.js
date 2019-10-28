@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Text, View, TextInput, StyleSheet } from "react-native";
 import Modal from "react-native-modal";
 import { Rating, AirbnbRating } from 'react-native-ratings';
-import ImageButton from "../components/ImageButton"
+import ImageButton from "../components/ImageButton";
+import Input from "../components/Input";
 
 const DEFAULT_RATING = 4;
 
@@ -29,17 +30,31 @@ const AddReview = props => {
     }
 
     return (
-        <Modal style={styles.modal} isVisible={props.visible} >
+        <Modal 
+
+            style={styles.modal} 
+            isVisible={props.visible} 
+            backdropColor={"#D4D4D4"} 
+            backdropOpacity={0.6}
+        >
             <View style={styles.header}>
                 <Text style={styles.text}>{props.name}</Text>
             </View>
-            <AirbnbRating defaultRating={DEFAULT_RATING}  onFinishRating={onFinishRating}/>
+            <AirbnbRating
+                selectedColor="#000000"
+                reviewColor="#000000"
+                reviewSize={26}
+                starContainerStyle={ {marginTop: 15} }
+                defaultRating={DEFAULT_RATING} 
+                onFinishRating={onFinishRating}
+            />
             <View style={styles.inputContainer}>
-                    <TextInput
+                    <Input
                         placeholder="Text review here" 
                         style={styles.input} 
                         onChangeText={addDescriptionHandler}
                         value={description}
+                        multiline={true}
                     />
             </View>
                 <ImageButton style={styles.submitButton} onPress={submitForm}
@@ -74,10 +89,15 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     input: {
-        width: "60%",
-        borderColor: "black",
-        borderWidth: 1, padding: 10,
-        marginBottom: 10
+        textAlign: "center",
+        padding: 10,
+        marginBottom: 10,
+        minHeight: 80, 
+        maxHeight: 160, 
+        height: "auto",
+        fontSize: 20,
+        lineHeight: 30, 
+        textAlign: "left"
     },
     submitButton: {
         top: 100

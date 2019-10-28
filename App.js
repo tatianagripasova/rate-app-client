@@ -3,9 +3,9 @@ import { StyleSheet, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import DialogInput from 'react-native-dialog-input';
 
-import AddReview from "./components/AddReview";
-import FilterRestaurants from "./components/FilterResturants";
-import Restaurant from "./components/Restaurant";
+import AddReview from "./screens/AddReview";
+import FilterRestaurants from "./screens/FilterResturants";
+import Restaurant from "./screens/Restaurant";
 import ImageButton from "./components/ImageButton";
 import ReviewContext from "./context/review-context";
 import { defaultRegion, getLocationAsync } from "./utils/geolocation";
@@ -141,8 +141,8 @@ export default function App() {
     setRestaurantModalMode(false)
   };
 
-  const onRegionChangeComplete = (newRegion) => {
-    setRegion(newRegion)
+  const onRegionChangeComplete = async (newRegion) => {
+    await setRegion(newRegion)
   };
 
   const openRateModalMode = () => {
@@ -182,7 +182,7 @@ export default function App() {
           filters={filters}
         />
         <AddReview 
-          visible={realRateModalMode} 
+          visible={realRateModalMode}
           name={currentRest.name} 
           submitReview={submitReview} 
           hideReviewModal={hideReviewModal}
@@ -207,7 +207,9 @@ export default function App() {
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1
+    flex: 1,
+    fontFamily: "System", 
+    fontSize: 18
   },
   map: {
     flex: 1, 

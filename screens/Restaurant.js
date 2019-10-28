@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Text, ScrollView}  from "react-native";
 import Modal from "react-native-modal";
-import ImageButton from "./ImageButton";
+import ImageButton from "../components/ImageButton";
 import Card from "../components/Card";
 import Header from "../components/Header";
 import { Rating } from "react-native-ratings";

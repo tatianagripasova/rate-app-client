@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { View, StyleSheet }  from "react-native";
 import Modal from "react-native-modal";
 import RadioForm from "react-native-simple-radio-button";
-import Header from "./Header";
-import ImageButton from "./ImageButton";
+import Header from "../components/Header";
+import ImageButton from "../components/ImageButton";
 import { radioRests, radioPrices } from "../utils/filter";
 
 const FilterRestaurants = props => {
