@@ -34,8 +34,8 @@ const AddReview = props => {
 
             style={styles.modal} 
             isVisible={props.visible} 
-            backdropColor={"#D4D4D4"} 
-            backdropOpacity={0.6}
+            backdropColor={"#EBEBEB"} 
+            backdropOpacity={0.9} 
         >
             <View style={styles.header}>
                 <Text style={styles.text}>{props.name}</Text>
