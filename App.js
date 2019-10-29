@@ -159,6 +159,7 @@ export default function App() {
   return (
     <View style={styles.screen}>
       <DialogInput 
+        textInputProps={{ keyboardType: "email-address" }}
         isDialogVisible={emailDialog}
         title={"Please enter your email"}
         submitInput={submitEmailInput}

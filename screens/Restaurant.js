@@ -4,7 +4,7 @@ import Modal from "react-native-modal";
 import ImageButton from "../components/ImageButton";
 import Card from "../components/Card";
 import Header from "../components/Header";
-import { Rating } from "react-native-ratings";
+import Rating from "../components/Rating";
 
 const Restaurant = props => {
     const Review = props.restaurant.reviews.sort((a,b) => b.id - a.id).map(rev => (
@@ -14,60 +14,76 @@ const Restaurant = props => {
         <Modal 
             onModalHide={props.onModalHide}
             isVisible={props.visible} 
-            style={styles.modal}
+            style={styles.modal} 
             coverScreen={true} 
             backdropColor={"white"} 
             backdropOpacity={1}
         >
-            <Header title={props.restaurant.name} />
-            <View>
-                <Text style={styles.textRating}>Google Rating: {props.restaurant.rating}</Text>
-                <Text style={styles.textRating}>Your Rating: {props.restaurant.userRating || 'Not rated'}</Text>
+            <View style={styles.container}>
+                <View style={styles.titles}>
+                    <Header
+                        title={props.restaurant.name} 
+                    />
+                    <Rating 
+                        rating={props.restaurant.rating} 
+                        text={"by Google"} 
+                    />
+                    {props.restaurant.userRating && (<Rating 
+                        rating={props.restaurant.userRating || 0}
+                        text={"Your Rating"}
+                    />)}
+                </View>
+                <View style={{ flex: props.restaurant.reviews.length ? 4 : 1 }} >
+                    <ScrollView>
+                        {Review} 
+                    </ScrollView>
+                </View>
+                <View style={styles.rateView}>
+                    <ImageButton 
+                        source={require("../images/rate.png")}
+                        onPress={props.openRateModalMode}
+                    />
+                </View>
+                <View style={styles.closeView}>
+                    <ImageButton 
+                        imageStyle={styles.cancelButtonImage}
+                        source={require("../images/cancel.png")}
+                        onPress={props.hideRestaurantModal}
+                    />
+                </View>
             </View>
-            <Header title="Your Rating" />
-            <ScrollView>
-               {Review} 
-            </ScrollView>
-            <ImageButton 
-                source={require("../images/rate.png")}
-                onPress={props.openRateModalMode}
-            />
-            <ImageButton style={styles.cancelButton} 
-                imageStyle={styles.cancelButtonImage}
-                source={require("../images/cancel.png")}
-                onPress={props.hideRestaurantModal}
-        />
         </Modal>
     )
 };
 
 const styles = StyleSheet.create({
     modal: {
-        flex: 1, 
         alignItems: "center"
+    },
+    container: {
+        flex: 1,
+        width: '100%'
+    },
+    titles: {
+        flex: 2,
     },
     textRating: {
         fontSize: 18, 
         margin: 5
-    }, 
-    header: {
-        width: "100%", 
-        alignItems: "center",
-        justifyContent: "center"
     },
     text: {
         fontSize: 26, 
         color: "black"
     },
-    cancelButton: {
-        bottom: 10
+    rateView: {
+        flex: 1
+    }, 
+    closeView: {
+        flex: 1
     },
     cancelButtonImage: {
         width: 60,
         height: 60
-    }, 
-    scrollView: {
-        width: "100%"
     }
 });
 
