@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Text, View, TextInput, StyleSheet } from "react-native";
+import { View, StyleSheet, Keyboard, TouchableWithoutFeedback } from "react-native";
 import Modal from "react-native-modal";
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import ImageButton from "../components/ImageButton";
 import Input from "../components/Input";
+import Header from "../components/Header";
 
 const DEFAULT_RATING = 4;
 
@@ -30,40 +31,53 @@ const AddReview = props => {
     }
 
     return (
-        <Modal 
-
+        <Modal
             style={styles.modal} 
             isVisible={props.visible} 
             backdropColor={"#EBEBEB"} 
             backdropOpacity={0.9} 
         >
-            <View style={styles.header}>
-                <Text style={styles.text}>{props.name}</Text>
-            </View>
-            <AirbnbRating
-                selectedColor="#000000"
-                reviewColor="#000000"
-                reviewSize={26}
-                starContainerStyle={ {marginTop: 15} }
-                defaultRating={DEFAULT_RATING} 
-                onFinishRating={onFinishRating}
-            />
-            <View style={styles.inputContainer}>
-                    <Input
-                        placeholder="Text review here" 
-                        style={styles.input} 
-                        onChangeText={addDescriptionHandler}
-                        value={description}
-                        multiline={true}
-                    />
-            </View>
-                <ImageButton style={styles.submitButton} onPress={submitForm}
-                  source={require("../images/submit.png")}
-                />
-                <ImageButton style={styles.cancelButton} imageStyle={styles.cancelButtonImage}
-                    source={require("../images/cancel.png")}
-                    onPress={() => {props.hideReviewModal()}}
-                />
+            <TouchableWithoutFeedback 
+                onPress={Keyboard.dismiss} 
+                accessible={false}
+            >
+                <View style={styles.container}>
+                    <View style={styles.content}>
+                        <Header title={props.name}
+                        />
+                        <AirbnbRating 
+                            selectedColor="#000000"
+                            reviewColor="#000000"
+                            reviewSize={26}
+                            starContainerStyle={ {marginTop: 7} }
+                            defaultRating={DEFAULT_RATING} 
+                            onFinishRating={onFinishRating}
+                        />
+                        <View style={styles.inputContainer}>
+                                <Input
+                                    placeholder="Text review here" 
+                                    style={styles.input} 
+                                    onChangeText={addDescriptionHandler}
+                                    value={description}
+                                    multiline={true}
+                                />
+                        </View>
+                    </View>
+                    <View style={styles.submitView}>
+                        <ImageButton 
+                            onPress={submitForm}
+                            source={require("../images/submit.png")}
+                        />
+                    </View>
+                    <View style={styles.closeView}>
+                        <ImageButton 
+                            imageStyle={styles.cancelButtonImage}
+                            source={require("../images/cancel.png")}
+                            onPress={() => {props.hideReviewModal()}}
+                        />
+                    </View>
+                </View>
+            </TouchableWithoutFeedback>
         </Modal>
     )
 };
@@ -73,24 +87,21 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    header: {
-        width: "100%", 
-        height: 90, 
-        paddingTop: 30, 
-        alignItems: "center",
-        justifyContent: "center"
+    container: {
+        flex: 1
+    },
+    content: {
+        flex: 3
     },
     text: {
         fontSize: 26, 
-        color: "white"
+        color: "#000000"
     },
     inputContainer: {
-        top: 50,
         alignItems: "center"
     },
     input: {
         textAlign: "center",
-        padding: 10,
         marginBottom: 10,
         minHeight: 80, 
         maxHeight: 160, 
@@ -99,11 +110,11 @@ const styles = StyleSheet.create({
         lineHeight: 30, 
         textAlign: "left"
     },
-    submitButton: {
-        top: 100
-    }, 
-    cancelButton: {
-        top: 50
+    submitView: {
+        flex: 1
+    },
+    closeView: {
+        flex: 1
     },
     cancelButtonImage: {
         width: 60,

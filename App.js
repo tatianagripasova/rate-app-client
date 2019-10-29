@@ -13,8 +13,8 @@ import { radioRests, radioPrices } from "./utils/filter";
 
 export default function App() {
   const [permission, setPermission] = useState(false);
-  const [emailDialog, setEmailDialog] = useState(true);
-  const [user, setUser] = useState("");
+  const [emailDialog, setEmailDialog] = useState(false);
+  const [user, setUser] = useState("bla");
  
   const [region, setRegion] = useState(defaultRegion);
 

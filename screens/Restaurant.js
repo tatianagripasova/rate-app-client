@@ -19,9 +19,7 @@ const Restaurant = props => {
             backdropColor={"white"} 
             backdropOpacity={1}
         >
-            <View style={styles.header}>
-                <Text style={styles.text}>{props.restaurant.name}</Text>
-            </View>
+            <Header title={props.restaurant.name} />
             <View>
                 <Text style={styles.textRating}>Google Rating: {props.restaurant.rating}</Text>
                 <Text style={styles.textRating}>Your Rating: {props.restaurant.userRating || 'Not rated'}</Text>
@@ -54,8 +52,6 @@ const styles = StyleSheet.create({
     }, 
     header: {
         width: "100%", 
-        height: 90, 
-        paddingTop: 30, 
         alignItems: "center",
         justifyContent: "center"
     },

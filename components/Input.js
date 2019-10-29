@@ -13,9 +13,10 @@ const styles = StyleSheet.create({
         color: "#000000",
         width: width * 0.8,
         height: 40, 
+        padding: 10,
         borderColor: "#000000",
         borderWidth: 1,
-        marginVertical: 40
+        marginTop: 40
     }
 });
 
