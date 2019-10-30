@@ -7,8 +7,8 @@ import Header from "../components/Header";
 import Rating from "../components/Rating";
 
 const Restaurant = props => {
-    const Review = props.restaurant.reviews.sort((a,b) => b.id - a.id).map(rev => (
-        <Card key={rev.id} rev={rev} />
+    const Review = props.restaurant.reviews.sort((a,b) => b.id - a.id).map((rev, i) => (
+        <Card key={rev.id} idx={i} rev={rev} />
     ));
     return (
         <Modal 
@@ -34,7 +34,7 @@ const Restaurant = props => {
                     />)}
                 </View>
                 <View style={{ flex: props.restaurant.reviews.length ? 4 : 1 }} >
-                    <ScrollView>
+                    <ScrollView contentContainerStyle={{marginTop: 20}}>
                         {Review} 
                     </ScrollView>
                 </View>
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 26, 
-        color: "black"
+        color: "#000000"
     },
     rateView: {
         flex: 1
