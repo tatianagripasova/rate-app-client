@@ -21,10 +21,10 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     }, 
     imageStyle: {
-        width: 90, 
-        height: 90
+        width: 120, 
+        height: 120
     }
 
-})
+});
 
 export default ImageButton;

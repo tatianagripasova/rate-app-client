@@ -1,7 +1,7 @@
-import React, {useState, useEffect, useContext }  from 'react';
-import { StyleSheet, View } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import DialogInput from 'react-native-dialog-input';
+import React, {useState, useEffect, useContext }  from "react";
+import { StyleSheet, View, AsyncStorage } from "react-native";
+import MapView, { Marker } from "react-native-maps";
+import DialogInput from "react-native-dialog-input";
 
 import AddReview from "./screens/AddReview";
 import FilterRestaurants from "./screens/FilterResturants";
@@ -14,7 +14,7 @@ import { radioRests, radioPrices } from "./utils/filter";
 export default function App() {
   const [permission, setPermission] = useState(false);
   const [emailDialog, setEmailDialog] = useState(false);
-  const [user, setUser] = useState("bla");
+  const [user, setUser] = useState("none");
  
   const [region, setRegion] = useState(defaultRegion);
 
@@ -32,6 +32,7 @@ export default function App() {
 
   useEffect(() => {
     getLocation();
+    getEmailFromStorage();
   }, [])
 
   useEffect(() => {
@@ -45,32 +46,49 @@ export default function App() {
         setCurrentRest(newCurrentRest);
       }
     }
-  }, [restaurants])
+  }, [restaurants]);
 
-  getLocation = async () => {
+  const getEmailFromStorage = async () => {
+    try {
+      const value = await AsyncStorage.getItem("userEmail");
+
+      if(value !== null) {
+        setUser(value);
+        setEmailDialog(false);
+      } else {
+        setEmailDialog(true);
+      }
+    } catch(e) {
+      setEmailDialog(true);
+    }
+  };
+
+  const getLocation = async () => {
     const { region, status } = await getLocationAsync();
     setRegion(region);
     setPermission(status);
   };
 
-  getRests = async () => {
-    if (user) {
-      const restsRaw = await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/restaurants/${region.latitude}/${region.longitude}/${radioRests[filters.cuisine]}/${filters.price + 1}`, {
-        method: "GET",
-        headers: {
-          "App-User": user
-        }
-      });
-      const currentRests = await restsRaw.json();
-      setRestaurants(currentRests);
-    } else {
-      setEmailDialog(true);
+  const getRests = async () => {
+    if (user !== "none") {
+      if (user) {
+        const restsRaw = await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/restaurants/${region.latitude}/${region.longitude}/${radioRests[filters.cuisine]}/${filters.price + 1}`, {
+          method: "GET",
+          headers: {
+            "App-User": user
+          }
+        });
+        const currentRests = await restsRaw.json();
+        setRestaurants(currentRests);
+      } else {
+        setEmailDialog(true);
+      }
     }
-  };
+  }; 
 
   const markers = restaurants.map(rest => (
     <Marker
-      image={require("./images/cancel.png")}
+      image={require("./images/marker.png")}
       onPress={() => {
         setCurrentRest(rest);
       }}
@@ -116,10 +134,11 @@ export default function App() {
       }
     })
     await getRests();
-  };
+  }; 
 
-  const submitEmailInput = (inputText) => {
+  const submitEmailInput = async (inputText) => {
     setUser(inputText);
+    await AsyncStorage.setItem("userEmail", inputText);
     setEmailDialog(false); 
   };
 
@@ -198,8 +217,8 @@ export default function App() {
           />
         </ReviewContext.Provider>
         <ImageButton 
-          source={require("./images/find.png")}
-          onPress={() => { user ? setFilterModalMode(true) : setEmailDialog(true); }}
+          source={require("./images/find.png")} 
+          onPress={() => { user && user !== "none" ? setFilterModalMode(true) : setEmailDialog(true); }}
         />
       </View>
     </View>
@@ -223,11 +242,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     bottom: 150
-  },
-  button: {
-    width: 50, 
-    height: 20, 
-    fontSize: 150
   }
 });
 

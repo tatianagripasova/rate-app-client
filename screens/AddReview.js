@@ -35,7 +35,7 @@ const AddReview = props => {
             style={styles.modal} 
             isVisible={props.visible} 
             backdropColor={"#EBEBEB"} 
-            backdropOpacity={0.9} 
+            backdropOpacity={0.97} 
         >
             <TouchableWithoutFeedback 
                 onPress={Keyboard.dismiss} 

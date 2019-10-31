@@ -52,7 +52,7 @@ const FilterRestaurants = props => {
                     </Picker>
                 </View>
                 <View style={styles.formRests}>
-                    <Header title="Pricing" />
+                    <Header title="Set a price level" />
                     <RadioForm
                         radio_props={radio_prices}
                         initial={price}
@@ -61,7 +61,7 @@ const FilterRestaurants = props => {
                         onPress={choosingPricing}
                         buttonColor={"#000000"}
                         selectedButtonColor={"#000000"}
-                        labelStyle={{ fontSize: 16, color: "#000000", margin: 5 }}
+                        labelStyle={{ fontSize: 18, color: "#000000", marginLeft: 0, paddingLeft: 5, marginRight: 20 }}
                     />
                 </View>  
                 <View style={{ flex: 1}}>
