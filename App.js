@@ -2,6 +2,7 @@ import React, {useState, useEffect, useContext }  from "react";
 import { StyleSheet, View, AsyncStorage } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import DialogInput from "react-native-dialog-input";
+import { getDistance } from "geolib";
 
 import AddReview from "./screens/AddReview";
 import FilterRestaurants from "./screens/FilterResturants";
@@ -70,7 +71,7 @@ export default function App() {
   };
 
   const getRests = async () => {
-    if (user !== "none") {
+    if (user !== "none" && getDistance(defaultRegion, region) > 200) {
       if (user) {
         const restsRaw = await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/restaurants/${region.latitude}/${region.longitude}/${radioRests[filters.cuisine]}/${filters.price + 1}`, {
           method: "GET",
@@ -161,7 +162,7 @@ export default function App() {
   };
 
   const onRegionChangeComplete = async (newRegion) => {
-    await setRegion(newRegion)
+    await setRegion(newRegion);
   };
 
   const openRateModalMode = () => {
@@ -244,5 +245,3 @@ const styles = StyleSheet.create({
     bottom: 150
   }
 });
-
-

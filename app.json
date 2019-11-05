@@ -24,6 +24,7 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.yourcompany.yourappname",
       "supportsTablet": true, 
       "config": {
         "googleMapsApiKey": "AIzaSyCa_RJAP1ZYeIiBcl-KvvuFW6IuJwTAGb4" 
@@ -32,6 +33,7 @@
 
 
     "android": {
+      "package": "com.yourcompany.yourappname",
       "config": {
           "googleMaps": {
               "apiKey": "AIzaSyCa_RJAP1ZYeIiBcl-KvvuFW6IuJwTAGb4"

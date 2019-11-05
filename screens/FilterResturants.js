@@ -41,8 +41,8 @@ const FilterRestaurants = props => {
             <View style={styles.wrapper}>
                 <View style={styles.picker}>
                     <Picker
-                        itemStyle={{ fontSize: 22, fontFamily: "System" }}
-                        style={{height: 100, width: 200}}
+                        itemStyle={styles.itemStyle}
+                        style={styles.pickerStyle}
                         selectedValue={cuisine}
                         onValueChange={choosingCuisine}
                     >
@@ -61,7 +61,7 @@ const FilterRestaurants = props => {
                         onPress={choosingPricing}
                         buttonColor={"#000000"}
                         selectedButtonColor={"#000000"}
-                        labelStyle={{ fontSize: 18, color: "#000000", marginLeft: 0, paddingLeft: 5, marginRight: 20 }}
+                        labelStyle={styles.labelStyle}
                     />
                 </View>  
                 <View style={{ flex: 1}}>
@@ -94,6 +94,21 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center", 
         marginBottom: 10
+    },
+    itemStyle: {
+        fontSize: 22, 
+        fontFamily: "System" 
+    },
+    pickerStyle : {
+        height: 100, 
+        width: 200
+    },
+    labelStyle: {
+        fontSize: 18, 
+        color: "#000000", 
+        marginLeft: 0, 
+        paddingLeft: 5, 
+        marginRight: 20
     },
     formRests: {
         flex: 1

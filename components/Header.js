@@ -4,7 +4,11 @@ import { View, Text, StyleSheet} from "react-native";
 const Header = props => {
     return (
         <View style={{ ...styles.header, ...props.header }}>
-            <Text style={{ ... styles.headerTitle, ...props.headerTitle}}>{props.title}</Text>
+            <Text 
+                style={{ ... styles.headerTitle, ...props.headerTitle}}
+            >
+                {props.title}
+            </Text>
         </View>
     )
 }

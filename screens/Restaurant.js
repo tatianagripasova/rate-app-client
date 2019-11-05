@@ -16,7 +16,7 @@ const Restaurant = props => {
             isVisible={props.visible} 
             style={styles.modal} 
             coverScreen={true} 
-            backdropColor={"white"} 
+            backdropColor={"#ffffff"} 
             backdropOpacity={1}
         >
             <View style={styles.container}>
@@ -40,6 +40,7 @@ const Restaurant = props => {
                 </View>
                 <View style={styles.rateView}>
                     <ImageButton 
+                        imageStyle={styles.rateButtonImage}
                         source={require("../images/rate.png")}
                         onPress={props.openRateModalMode}
                     />
@@ -80,6 +81,10 @@ const styles = StyleSheet.create({
     }, 
     closeView: {
         flex: 1
+    },
+    rateButtonImage: {
+        width: 90, 
+        height: 90
     },
     cancelButtonImage: {
         width: 60,
