@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { View, StyleSheet, Keyboard, TouchableWithoutFeedback, Dimensions } from "react-native";
 import Modal from "react-native-modal";
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import ImageButton from "../components/ImageButton";
@@ -7,6 +7,7 @@ import Input from "../components/Input";
 import Header from "../components/Header";
 
 const DEFAULT_RATING = 4;
+const height = Math.round(Dimensions.get('window').height) - 50;
 
 const AddReview = props => {
     const [description, setDescription] = useState("");
@@ -86,10 +87,12 @@ const AddReview = props => {
 const styles = StyleSheet.create({
     modal: {
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     container: {
-        flex: 1
+        flex: 1,
+        minHeight: height,
+        height: height
     },
     content: {
         flex: 3

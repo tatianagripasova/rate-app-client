@@ -31,8 +31,6 @@
         "googleMapsApiKey": "AIzaSyCa_RJAP1ZYeIiBcl-KvvuFW6IuJwTAGb4" 
       }
     },
-
-
     "android": {
       "package": "tips.foodie.app",
       "config": {
