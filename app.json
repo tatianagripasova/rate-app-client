@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "React-Native-Rate-App",
-    "slug": "RN-Rate-App",
+    "name": "Foodie",
+    "slug": "Foodie",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [
@@ -17,6 +17,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "description": "The Foodie is your perfect restaurant diary app.",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -24,7 +25,7 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.yourcompany.yourappname",
+      "bundleIdentifier": "tips.foodie.app",
       "supportsTablet": true, 
       "config": {
         "googleMapsApiKey": "AIzaSyCa_RJAP1ZYeIiBcl-KvvuFW6IuJwTAGb4" 
@@ -33,7 +34,7 @@
 
 
     "android": {
-      "package": "com.yourcompany.yourappname",
+      "package": "tips.foodie.app",
       "config": {
           "googleMaps": {
               "apiKey": "AIzaSyCa_RJAP1ZYeIiBcl-KvvuFW6IuJwTAGb4"

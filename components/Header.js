@@ -1,5 +1,5 @@
 import React from "react"
-import { View, Text, StyleSheet} from "react-native";
+import { View, Text, Platform, StyleSheet} from "react-native";
 
 const Header = props => {
     return (
@@ -16,7 +16,7 @@ const Header = props => {
 const styles = StyleSheet.create({
     header: {
         height: 'auto',
-        marginTop: 60, 
+        marginTop: Platform.OS === "ios" ? 60 : 20, 
         marginBottom: 30,
         alignItems: "center",
         justifyContent: "center"

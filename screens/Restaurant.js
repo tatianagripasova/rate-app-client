@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Text, ScrollView}  from "react-native";
+import { View, StyleSheet, ScrollView }  from "react-native";
 import Modal from "react-native-modal";
 import ImageButton from "../components/ImageButton";
 import Card from "../components/Card";
@@ -26,14 +26,14 @@ const Restaurant = props => {
                     />
                     <Rating 
                         rating={props.restaurant.rating} 
-                        text={"by Google"} 
+                        text={"Google Rating"} 
                     />
                     {props.restaurant.userRating && (<Rating 
                         rating={props.restaurant.userRating || 0}
                         text={"Your Rating"}
                     />)}
                 </View>
-                <View style={{ flex: props.restaurant.reviews.length ? 4 : 1 }} >
+                <View style={{ flex: props.restaurant.reviews.length ? 3 : 1 }} >
                     <ScrollView contentContainerStyle={{marginTop: 20}}>
                         {Review} 
                     </ScrollView>

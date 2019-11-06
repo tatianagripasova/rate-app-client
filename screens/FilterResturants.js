@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Picker } from "react-native";
+import { View, StyleSheet, Platform, Picker } from "react-native";
 import Modal from "react-native-modal";
 import RadioForm from "react-native-simple-radio-button";
 import Header from "../components/Header";
@@ -96,22 +96,22 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     itemStyle: {
-        fontSize: 22, 
-        fontFamily: "System" 
+        fontSize: 22,
+        fontFamily: "System"
     },
     pickerStyle : {
-        height: 100, 
+        height: 51, 
         width: 200
     },
     labelStyle: {
-        fontSize: 18, 
+        fontSize: 18,
         color: "#000000", 
         marginLeft: 0, 
         paddingLeft: 5, 
         marginRight: 20
     },
     formRests: {
-        flex: 1
+        flex: Platform.OS === "ios" ? 1 : 2
     },
     cancelButtonImage: {
         width: 60,

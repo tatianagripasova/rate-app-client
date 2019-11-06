@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext }  from "react";
+import React, {useState, useEffect }  from "react";
 import { StyleSheet, View, AsyncStorage } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import DialogInput from "react-native-dialog-input";
@@ -10,7 +10,7 @@ import Restaurant from "./screens/Restaurant";
 import ImageButton from "./components/ImageButton";
 import ReviewContext from "./context/review-context";
 import { defaultRegion, getLocationAsync } from "./utils/geolocation";
-import { radioRests, radioPrices } from "./utils/filter";
+import { radioRests } from "./utils/filter";
 
 export default function App() {
   const [permission, setPermission] = useState(false);
@@ -73,7 +73,7 @@ export default function App() {
   const getRests = async () => {
     if (user !== "none" && getDistance(defaultRegion, region) > 200) {
       if (user) {
-        const restsRaw = await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/restaurants/${region.latitude}/${region.longitude}/${radioRests[filters.cuisine]}/${filters.price + 1}`, {
+        const restsRaw = await fetch(`http://foodie.tips/restaurants/${region.latitude}/${region.longitude}/${radioRests[filters.cuisine]}/${filters.price + 1}`, {
           method: "GET",
           headers: {
             "App-User": user
@@ -110,7 +110,7 @@ export default function App() {
   const submitReview = async (review) => {
     setRateModalMode(false);
     setRealRateModalMode(false);
-    await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/review`, {
+    await fetch(`http://foodie.tips/review`, {
       method: "POST",
       headers: {
         Accept: 'application/json',
@@ -126,7 +126,7 @@ export default function App() {
   };
 
   const deleteReview = async (revId) => {
-    await fetch(`http://eb-dev2.us-east-2.elasticbeanstalk.com/review/${revId}`, {
+    await fetch(`http://foodie.tips/review/${revId}`, {
       method: "DELETE",
       headers: {
         Accept: 'application/json',
@@ -162,7 +162,9 @@ export default function App() {
   };
 
   const onRegionChangeComplete = async (newRegion) => {
-    await setRegion(newRegion);
+    if (getDistance(region, newRegion) > 300) {
+      await setRegion(newRegion);
+    }
   };
 
   const openRateModalMode = () => {

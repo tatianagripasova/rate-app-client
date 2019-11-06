@@ -54,13 +54,14 @@ const AddReview = props => {
                             onFinishRating={onFinishRating}
                         />
                         <View style={styles.inputContainer}>
+                            
                                 <Input
                                     placeholder="Text review here" 
                                     style={styles.input} 
                                     onChangeText={addDescriptionHandler}
                                     value={description}
                                     multiline={true}
-                                />
+                                />   
                         </View>
                     </View>
                     <View style={styles.submitView}>
@@ -70,7 +71,7 @@ const AddReview = props => {
                         />
                     </View>
                     <View style={styles.closeView}>
-                        <ImageButton 
+                        <ImageButton
                             imageStyle={styles.cancelButtonImage}
                             source={require("../images/cancel.png")}
                             onPress={() => {props.hideReviewModal()}}
