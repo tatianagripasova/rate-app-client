@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Keyboard, TouchableWithoutFeedback, Dimensions } from "react-native";
 import Modal from "react-native-modal";
-import { Rating, AirbnbRating } from 'react-native-ratings';
+import { AirbnbRating } from 'react-native-ratings';
 import ImageButton from "../components/ImageButton";
 import Input from "../components/Input";
 import Header from "../components/Header";
@@ -31,6 +31,10 @@ const AddReview = props => {
         setRating(DEFAULT_RATING);
     }
 
+    const returnFromKeyboard = async() => {
+        Keyboard.dismiss();
+    }
+
     return (
         <Modal
             style={styles.modal} 
@@ -55,11 +59,12 @@ const AddReview = props => {
                             onFinishRating={onFinishRating}
                         />
                         <View style={styles.inputContainer}>
-                            
                                 <Input
                                     placeholder="Text review here" 
                                     style={styles.input} 
+                                    onSubmitEditing={returnFromKeyboard}
                                     onChangeText={addDescriptionHandler}
+                                    blurOnSubmit={true}
                                     value={description}
                                     multiline={true}
                                 />   

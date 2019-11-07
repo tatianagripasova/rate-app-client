@@ -17,7 +17,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "description": "The Foodie is your perfect restaurant diary app.",
+    "description": "The Foodie is a restaurant diary app.",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -26,7 +26,10 @@
     ],
     "ios": {
       "bundleIdentifier": "tips.foodie.app",
-      "supportsTablet": true, 
+      "supportsTablet": false, 
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription" : "The Foodie.tips app uses users' location in order to get nearby restaurants"
+      },
       "config": {
         "googleMapsApiKey": "AIzaSyCa_RJAP1ZYeIiBcl-KvvuFW6IuJwTAGb4" 
       }

@@ -47,7 +47,7 @@ const Card = props => {
             </View>
             <View style={styles.cancelButton}>
                 <ImageButton 
-                    source={require("../images/cancel.png")}
+                    source={require("../images/trash.png")}
                     imageStyle={styles.cancelButtonImage}
                     title="remove"
                     onPress={deleteRev}
@@ -90,8 +90,8 @@ const styles = StyleSheet.create({
         flex: 1
     },
     cancelButtonImage: {
-        width: 30,
-        height: 30
+        width: 35,
+        height: 35
     }
 });
 
