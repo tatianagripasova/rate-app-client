@@ -3,7 +3,7 @@ import { StyleSheet, View, AsyncStorage } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import DialogInput from "react-native-dialog-input";
 import { getDistance } from "geolib";
-
+import { Authenticate } from "react-native-expo-auth";
 import AddReview from "./screens/AddReview";
 import FilterRestaurants from "./screens/FilterResturants";
 import Restaurant from "./screens/Restaurant";
@@ -14,8 +14,10 @@ import { radioRests } from "./utils/filter";
 
 export default function App() {
   const [permission, setPermission] = useState(false);
-  const [emailDialog, setEmailDialog] = useState(false);
-  const [user, setUser] = useState("none");
+  const [authDialog, setAuthDialog] = useState(false);
+  const [token, setToken] = useState("none");
+  const [logins, setLogins] = useState([]);
+  const [authError, setAuthError] = useState(null);
  
   const [region, setRegion] = useState(defaultRegion);
 
@@ -33,12 +35,12 @@ export default function App() {
 
   useEffect(() => {
     getLocation();
-    getEmailFromStorage();
+    getTokenAndEmailFromStorage();
   }, [])
 
   useEffect(() => {
     getRests();
-  }, [region, filters, user])
+  }, [region, filters, token])
 
   useEffect(() => {
     if (Object.keys(currentRest).length && restaurants.length) {
@@ -49,18 +51,19 @@ export default function App() {
     }
   }, [restaurants]);
 
-  const getEmailFromStorage = async () => {
+  const getTokenAndEmailFromStorage = async () => {
     try {
-      const value = await AsyncStorage.getItem("userEmail");
-
-      if(value !== null) {
-        setUser(value);
-        setEmailDialog(false);
+      const token = await AsyncStorage.getItem("userToken");
+      const logins = await AsyncStorage.getItem("logins");
+      if(token !== null) {
+        setToken(token);
+        setLogins(JSON.parse(logins));
+        setAuthDialog(false);
       } else {
-        setEmailDialog(true);
+        setAuthDialog(true);
       }
     } catch(e) {
-      setEmailDialog(true);
+      setAuthDialog(true);
     }
   };
 
@@ -71,18 +74,22 @@ export default function App() {
   };
 
   const getRests = async () => {
-    if (user !== "none" && getDistance(defaultRegion, region) > 200) {
-      if (user) {
+    if (token !== "none" && getDistance(defaultRegion, region) > 200) {
+      if (token) {
         const restsRaw = await fetch(`http://foodie.tips/restaurants/${region.latitude}/${region.longitude}/${radioRests[filters.cuisine]}/${filters.price + 1}`, {
           method: "GET",
           headers: {
-            "App-User": user
+            "Auth-Token": token
           }
         });
-        const currentRests = await restsRaw.json();
-        setRestaurants(currentRests);
+        if(restsRaw.status === 401) {
+          setAuthDialog(true);
+        } else {
+          const currentRests = await restsRaw.json();
+          setRestaurants(currentRests);
+        }
       } else {
-        setEmailDialog(true);
+        setAuthDialog(true);
       }
     }
   }; 
@@ -110,12 +117,12 @@ export default function App() {
   const submitReview = async (review) => {
     setRateModalMode(false);
     setRealRateModalMode(false);
-    await fetch(`http://foodie.tips/review`, {
+    await fetch("http://foodie.tips/review", {
       method: "POST",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'App-User': user
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Auth-Token": token
       },
       body: JSON.stringify({
         review, 
@@ -129,18 +136,47 @@ export default function App() {
     await fetch(`http://foodie.tips/review/${revId}`, {
       method: "DELETE",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'App-User': user
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Auth-Token": token
       }
     })
     await getRests();
-  }; 
+  };
 
-  const submitEmailInput = async (inputText) => {
-    setUser(inputText);
-    await AsyncStorage.setItem("userEmail", inputText);
-    setEmailDialog(false); 
+  const submitAuth = async(data, route) => {
+    const signUpRaw = await fetch(`http://foodie.tips/${route}`, {
+      method: "POST", 
+      headers: {
+        Accept: 'application/json',
+        "Content-Type": "application/json"
+      }, 
+      body: JSON.stringify(data)
+    });
+    if(signUpRaw.status !== 200) {
+      setAuthError(await signUpRaw.text());
+    } else {
+      setAuthError(null);
+      const { token, emails } = await signUpRaw.json();
+      setToken(token);
+      setLogins(emails);
+      await AsyncStorage.setItem("userToken", token);
+      await AsyncStorage.setItem("logins", JSON.stringify(emails));
+      setAuthDialog(false); 
+    }
+    
+  };
+
+  const submitSignUp = async (data) => {
+    await submitAuth(data, "signup");
+  }
+
+  const submitSignIn = async(data) => {
+    await submitAuth(data, "signin");
+  };
+
+  const submitBioLogin = async (data) => {
+    await submitAuth(data, "biologin");
   };
 
   const applyFilters = (settings) => {
@@ -177,17 +213,17 @@ export default function App() {
       setRealRateModalMode(true);
     }
   };
-
   return (
     <View style={styles.screen}>
-      <DialogInput 
-        textInputProps={{ keyboardType: "email-address" }}
-        isDialogVisible={emailDialog}
-        title={"Please enter your email"}
-        submitInput={submitEmailInput}
-        closeDialog={() => {setEmailDialog(false)}}
-      >
-      </DialogInput>
+      <Authenticate 
+        visible={authDialog}
+        onLogin={submitSignIn} 
+        onSignUp={submitSignUp}
+        onBioLogin={submitBioLogin}
+        logins={logins}
+        enableBio={true}
+        error={authError}
+      />
       <MapView 
         style={styles.map}
         region={region} 
@@ -221,7 +257,7 @@ export default function App() {
         </ReviewContext.Provider>
         <ImageButton 
           source={require("./images/find.png")} 
-          onPress={() => { user && user !== "none" ? setFilterModalMode(true) : setEmailDialog(true); }}
+          onPress={() => { token && token !== "none" ? setFilterModalMode(true) : setAuthDialog(true); }}
         />
       </View>
     </View>
