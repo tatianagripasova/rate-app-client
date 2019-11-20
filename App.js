@@ -17,7 +17,6 @@ export default function App() {
   const [authDialog, setAuthDialog] = useState(false);
   const [token, setToken] = useState("none");
   const [logins, setLogins] = useState([]);
-  const [authError, setAuthError] = useState(null);
  
   const [region, setRegion] = useState(defaultRegion);
 
@@ -154,30 +153,33 @@ export default function App() {
       body: JSON.stringify(data)
     });
     if(signUpRaw.status !== 200) {
-      setAuthError(await signUpRaw.text());
-    } else {
-      setAuthError(null);
-      const { token, emails } = await signUpRaw.json();
+      return {
+        success: false,
+        error: await signUpRaw.text()
+      };
+    }
+    const { token, emails } = await signUpRaw.json();
+    if (token) {
       setToken(token);
       setLogins(emails);
       await AsyncStorage.setItem("userToken", token);
       await AsyncStorage.setItem("logins", JSON.stringify(emails));
-      setAuthDialog(false); 
+      setAuthDialog(false);
     }
-    
+    return {
+      success: true
+    };
   };
 
-  const submitSignUp = async (data) => {
-    await submitAuth(data, "signup");
-  }
+  const submitSignUp = async (data) => await submitAuth(data, "signup");
 
-  const submitSignIn = async(data) => {
-    await submitAuth(data, "signin");
-  };
+  const submitSignIn = async (data) => await submitAuth(data, "signin");
 
-  const submitBioLogin = async (data) => {
-    await submitAuth(data, "biologin");
-  };
+  const submitBioLogin = async (data) => await submitAuth(data, "biologin");
+
+  const submitPinCodeRequest = async (data) => await submitAuth(data, "reset");
+
+  const submitNewPassword = async (data) => await submitAuth(data, "doreset");
 
   const applyFilters = (settings) => {
     setFilters(settings);
@@ -220,9 +222,10 @@ export default function App() {
         onLogin={submitSignIn} 
         onSignUp={submitSignUp}
         onBioLogin={submitBioLogin}
+        onPinCodeRequest={submitPinCodeRequest}
+        onSubmitNewPassword={submitNewPassword}
         logins={logins}
         enableBio={true}
-        error={authError}
       />
       <MapView 
         style={styles.map}

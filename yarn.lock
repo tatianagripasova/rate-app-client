@@ -4202,10 +4202,10 @@ react-native-dialog-input@^1.0.7:
   resolved "https://registry.yarnpkg.com/react-native-dialog-input/-/react-native-dialog-input-1.0.7.tgz#b2fefb4193d1784b3ae78c4a18d8fd6759466009"
   integrity sha512-boi++dT2tzV8eCZud5Qe3LY/cdTGfgf93Vy4MFxq3O/4rBehllwCfBn5fhWMuf3JcVlzrk0fBsv/Ny766BiyVA==
 
-react-native-expo-auth@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/react-native-expo-auth/-/react-native-expo-auth-0.0.2.tgz#e473bdc8c8e9d64ddf6c6949e17e6ec661a8a475"
-  integrity sha512-rtTnRla78gUeURw61hUtxTktS+Ij2r2dUSArXg4dEUafAlvQVkUGm1bZN9WcX1GeoqfsLQjLqlfz80tCJ2LTeg==
+react-native-expo-auth@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-expo-auth/-/react-native-expo-auth-0.0.4.tgz#9b82a66f2b4e23ecdc867aaca7b03c2a72c35200"
+  integrity sha512-3KkWsAt1+mmor1cCkXrPTTTQW2Hiiwu3QJI5wqZeo9Kd+RhfO7WD6ugJ7VOsJuSVhRUpZ21wsQ0qOfhN0v35Bg==
   dependencies:
     expo-constants "~7.0.0"
     expo-local-authentication "^7.0.0"
