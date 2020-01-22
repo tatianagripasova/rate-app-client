@@ -91,8 +91,8 @@ const AddReview = props => {
 
 const styles = StyleSheet.create({
     modal: {
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: "center",
+        alignItems: "center"
     },
     container: {
         flex: 1,

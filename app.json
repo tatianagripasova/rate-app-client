@@ -28,7 +28,8 @@
       "bundleIdentifier": "tips.foodie.app",
       "supportsTablet": false, 
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription" : "The Foodie.tips app uses users' location in order to get nearby restaurants"
+        "NSLocationWhenInUseUsageDescription" : "The Foodie.tips app uses users' location in order to get nearby restaurants",
+        "NSFaceIDUsageDescription": "The Foodie.tips app uses FaceID to authenticate registered users"
       },
       "config": {
         "googleMapsApiKey": "AIzaSyCa_RJAP1ZYeIiBcl-KvvuFW6IuJwTAGb4" 

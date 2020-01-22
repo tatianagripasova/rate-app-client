@@ -16,7 +16,7 @@ const Restaurant = props => {
             isVisible={props.visible} 
             style={styles.modal} 
             coverScreen={true} 
-            backdropColor={"#ffffff"} 
+            backdropColor={"#ffffff"}
             backdropOpacity={1}
         >
             <View style={styles.container}>

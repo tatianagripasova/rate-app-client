@@ -1,7 +1,7 @@
 import React, {useState, useEffect }  from "react";
 import { StyleSheet, View, AsyncStorage } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import DialogInput from "react-native-dialog-input";
+
 import { getDistance } from "geolib";
 import { Authenticate } from "react-native-expo-auth";
 import AddReview from "./screens/AddReview";
