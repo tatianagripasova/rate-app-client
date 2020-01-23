@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     header: {
         height: 'auto',
         marginTop: Platform.OS === "ios" ? 60 : 20, 
-        marginBottom: 30,
+        marginBottom: 25,
         alignItems: "center",
         justifyContent: "center"
     }, 

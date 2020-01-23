@@ -36,11 +36,12 @@ const FilterRestaurants = props => {
             coverScreen={true} 
             backdropColor={"#FFFFFF"}
             backdropOpacity={1} 
-        >
-            <Header title="Choose a Cuisine" />
+        >   
+            <Header header={styles.header} headerTitle={styles.title} title="Choose a Cuisine" />
             <View style={styles.wrapper}>
                 <View style={styles.picker}>
                     <Picker
+                        mode="dropdown"
                         itemStyle={styles.itemStyle}
                         style={styles.pickerStyle}
                         selectedValue={cuisine}
@@ -52,20 +53,21 @@ const FilterRestaurants = props => {
                     </Picker>
                 </View>
                 <View style={styles.formRests}>
-                    <Header title="Set a price level" />
+                    <Header headerTitle={styles.title} title="Set a Price Level" />
                     <RadioForm
                         radio_props={radio_prices}
                         initial={price}
                         formHorizontal={true}
                         animation={true}
                         onPress={choosingPricing}
-                        buttonColor={"#000000"}
-                        selectedButtonColor={"#000000"}
+                        buttonColor={"#555454"}
+                        selectedButtonColor={"#555454"}
                         labelStyle={styles.labelStyle}
                     />
-                </View>  
+                </View>
                 <View style={{ flex: 1}}>
-                    <ImageButton 
+                    <ImageButton
+                        imageStyle={styles.submitButtonImage}
                         source={require("../images/submit.png")} 
                         onPress={applyFilters} 
                     />
@@ -90,13 +92,22 @@ const styles = StyleSheet.create({
     wrapper: {
         flex: 1
     },
+    header: {
+        marginBottom: 0
+    },
+    title: {
+        fontFamily: "System",
+        fontSize: 22,
+        fontWeight: "300"
+    },
     picker: {
         flex: 1,
-        alignItems: "center", 
-        marginBottom: 10
+        alignItems: "center",
+        justifyContent: Platform.OS === "ios" ? "flex-start" : "center",
+        marginBottom: 10,
     },
     itemStyle: {
-        fontSize: 22,
+        fontSize: 18,
         fontFamily: "System"
     },
     pickerStyle : {
@@ -104,7 +115,9 @@ const styles = StyleSheet.create({
         width: 200
     },
     labelStyle: {
-        fontSize: 18,
+        fontFamily: "System",
+        fontSize: 16,
+        fontWeight: "300",
         color: "#000000", 
         marginLeft: 0, 
         paddingLeft: 5, 
@@ -113,9 +126,13 @@ const styles = StyleSheet.create({
     formRests: {
         flex: Platform.OS === "ios" ? 1 : 2
     },
+    submitButtonImage: {
+        width: 100,
+        height: 100
+    },
     cancelButtonImage: {
-        width: 60,
-        height: 60
+        width: 35,
+        height: 35
     }
 });
 

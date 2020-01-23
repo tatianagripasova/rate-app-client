@@ -1,5 +1,5 @@
 import React, {useState, useEffect }  from "react";
-import { StyleSheet, View, AsyncStorage } from "react-native";
+import { StyleSheet, View, AsyncStorage, Dimensions } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
 import { getDistance } from "geolib";
@@ -11,6 +11,8 @@ import ImageButton from "./components/ImageButton";
 import ReviewContext from "./context/review-context";
 import { defaultRegion, getLocationAsync } from "./utils/geolocation";
 import { radioRests } from "./utils/filter";
+
+const height = Math.round(Dimensions.get('window').height);
 
 export default function App() {
   const [permission, setPermission] = useState(false);
@@ -199,9 +201,17 @@ export default function App() {
     setRestaurantModalMode(false)
   };
 
+  let regionChangeTimer;
+
   const onRegionChangeComplete = async (newRegion) => {
     if (getDistance(region, newRegion) > 300) {
-      await setRegion(newRegion);
+      if (regionChangeTimer) {
+        clearTimeout(regionChangeTimer);
+      }
+
+      regionChangeTimer = setTimeout(async () => {
+        await setRegion(newRegion);
+      }, 3000);
     }
   };
 
@@ -237,6 +247,11 @@ export default function App() {
       {markers}
       </MapView>
       <View style={styles.overlay}>
+        <ImageButton 
+          source={require("./images/find.png")}
+          imageStyle={styles.findImage}
+          onPress={() => { token && token !== "none" ? setFilterModalMode(true) : setAuthDialog(true); }}
+        />
         <FilterRestaurants
           visible={filterModalMode} 
           applyFilters={applyFilters} 
@@ -258,10 +273,6 @@ export default function App() {
             onModalHide={onModalHide}
           />
         </ReviewContext.Provider>
-        <ImageButton 
-          source={require("./images/find.png")} 
-          onPress={() => { token && token !== "none" ? setFilterModalMode(true) : setAuthDialog(true); }}
-        />
       </View>
     </View>
   )
@@ -283,6 +294,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     width: "100%",
-    bottom: 150
+    bottom: height < 700 ? 50 : 80
+  },
+  findImage: {
+    width: 80,
+    height: 80
   }
 });
