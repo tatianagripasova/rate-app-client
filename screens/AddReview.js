@@ -48,19 +48,23 @@ const AddReview = props => {
             >
                 <View style={styles.container}>
                     <View style={styles.content}>
-                        <Header title={props.name}
+                        <Header
+                            header={styles.header}
+                            headerTitle={styles.title}
+                            title={props.name}
                         />
                         <AirbnbRating 
                             selectedColor="#000000"
                             reviewColor="#000000"
-                            reviewSize={26}
+                            reviewSize={22}
+                            size={24}
                             starContainerStyle={ {marginTop: 7} }
                             defaultRating={DEFAULT_RATING} 
                             onFinishRating={onFinishRating}
                         />
                         <View style={styles.inputContainer}>
                                 <Input
-                                    placeholder="Text review here" 
+                                    placeholder="Your review here." 
                                     style={styles.input} 
                                     onSubmitEditing={returnFromKeyboard}
                                     onChangeText={addDescriptionHandler}
@@ -70,18 +74,21 @@ const AddReview = props => {
                                 />   
                         </View>
                     </View>
-                    <View style={styles.submitView}>
-                        <ImageButton 
-                            onPress={submitForm}
-                            source={require("../images/submit.png")}
-                        />
-                    </View>
-                    <View style={styles.closeView}>
-                        <ImageButton
-                            imageStyle={styles.cancelButtonImage}
-                            source={require("../images/cancel.png")}
-                            onPress={() => {props.hideReviewModal()}}
-                        />
+                    <View style={styles.buttonContainer}>
+                        <View style={styles.submit}>
+                            <ImageButton
+                                imageStyle={styles.submitButton}
+                                onPress={submitForm}
+                                source={require("../images/submit.png")}
+                            />
+                        </View>
+                        <View style={styles.cancel}>
+                            <ImageButton
+                                imageStyle={styles.cancelButtonImage}
+                                source={require("../images/cancel.png")}
+                                onPress={() => {props.hideReviewModal()}}
+                            />
+                        </View>
                     </View>
                 </View>
             </TouchableWithoutFeedback>
@@ -96,14 +103,24 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+        width: "100%",
         minHeight: height,
         height: height
+    },
+    header: {
+        marginBottom: 30
+    },
+    title: {
+        fontFamily: "System",
+        fontSize: 22,
+        fontWeight: "300"
     },
     content: {
         flex: 3
     },
     text: {
-        fontSize: 26, 
+        fontSize: 16,
+        fontWeight: "bold",
         color: "#000000"
     },
     inputContainer: {
@@ -112,22 +129,34 @@ const styles = StyleSheet.create({
     input: {
         textAlign: "center",
         marginBottom: 10,
+        width: "100%",
         minHeight: 80, 
         maxHeight: 160, 
         height: "auto",
-        fontSize: 20,
+        fontFamily: "System",
+        fontSize: 16,
         lineHeight: 30, 
-        textAlign: "left"
+        textAlign: "left",
+        borderColor: "#555454"
     },
-    submitView: {
+    buttonContainer: {
+        flex: 2
+    },
+    submit: {
         flex: 1
     },
-    closeView: {
-        flex: 1
+    submitButton: {
+        width: 90, 
+        height: 90
+    },
+    cancel: {
+        flex: 1,
+        paddingTop: 30
     },
     cancelButtonImage: {
-        width: 60,
-        height: 60
+        width: 35,
+        height: 35,
+        paddingTop: 30
     }
 });
 

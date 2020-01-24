@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Platform, Picker } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import Modal from "react-native-modal";
-import RadioForm from "react-native-simple-radio-button";
+import RNPickerSelect, { defaultStyles } from "react-native-picker-select";
+import { Ionicons } from '@expo/vector-icons';
+
 import Header from "../components/Header";
 import ImageButton from "../components/ImageButton";
 import { radioRests, radioPrices } from "../utils/filter";
@@ -33,46 +35,60 @@ const FilterRestaurants = props => {
         <Modal 
             style={styles.modal} 
             isVisible={props.visible} 
-            coverScreen={true} 
+            coverScreen={true}
             backdropColor={"#FFFFFF"}
-            backdropOpacity={1} 
+            backdropOpacity={1}
         >   
-            <Header header={styles.header} headerTitle={styles.title} title="Choose a Cuisine" />
-            <View style={styles.wrapper}>
-                <View style={styles.picker}>
-                    <Picker
-                        mode="dropdown"
-                        itemStyle={styles.itemStyle}
-                        style={styles.pickerStyle}
-                        selectedValue={cuisine}
+            <View style={styles.selectContainer}>
+                <Header header={styles.header} headerTitle={styles.title} title="Choose a Cuisine" />
+
+                    <RNPickerSelect
+                        placeholder={{}}
+                        style={{
+                            ...pickerSelectStyles,
+                            iconContainer: {
+                                top: 10,
+                                right: 12,
+                            }
+                        }}
+                        Icon={() => {
+                            return <Ionicons name="md-arrow-down" size={26} color="#555454" />;
+                        }}
+                        useNativeAndroidPickerStyle={false}
+                        value={cuisine}
                         onValueChange={choosingCuisine}
-                    >
-                    {radioRests.map((food, i) => 
-                        (<Picker.Item key={i} label={food} value={i} />))
-                    }
-                    </Picker>
-                </View>
-                <View style={styles.formRests}>
-                    <Header headerTitle={styles.title} title="Set a Price Level" />
-                    <RadioForm
-                        radio_props={radio_prices}
-                        initial={price}
-                        formHorizontal={true}
-                        animation={true}
-                        onPress={choosingPricing}
-                        buttonColor={"#555454"}
-                        selectedButtonColor={"#555454"}
-                        labelStyle={styles.labelStyle}
+                        items={radioRests.map((food, i) => ({ label: food, value: i }))}
                     />
-                </View>
-                <View style={{ flex: 1}}>
+
+                <Header header={styles.header} headerTitle={styles.title} title="Set a Price Level" />
+
+                    <RNPickerSelect
+                        placeholder={{}}
+                        style={{
+                            ...pickerSelectStyles,
+                            iconContainer: {
+                                top: 10,
+                                right: 12,
+                            }
+                        }}
+                        Icon={() => {
+                            return <Ionicons name="md-arrow-down" size={26} color="#555454" />;
+                        }}
+                        useNativeAndroidPickerStyle={false}
+                        value={price}
+                        onValueChange={choosingPricing}
+                        items={radioPrices.map((price, i) => ({ label: price, value: i }))}
+                    />
+                
                     <ImageButton
                         imageStyle={styles.submitButtonImage}
                         source={require("../images/submit.png")} 
                         onPress={applyFilters} 
                     />
-                </View>
-                <View style={{ flex: 1 }}>
+                
+            </View>
+            <View style={styles.buttonContainer}>
+                <View style={styles.cancel}>
                     <ImageButton
                         imageStyle={styles.cancelButtonImage}
                         source={require("../images/cancel.png")}
@@ -89,51 +105,70 @@ const styles = StyleSheet.create({
         flex: 1, 
         alignItems: "center"
     }, 
-    wrapper: {
-        flex: 1
+    selectContainer: {
+        flex: 10
     },
     header: {
-        marginBottom: 0
+        marginBottom: 20
     },
     title: {
         fontFamily: "System",
         fontSize: 22,
         fontWeight: "300"
     },
-    picker: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: Platform.OS === "ios" ? "flex-start" : "center",
-        marginBottom: 10,
+    selectCuisine: {
+        flex: 1
     },
-    itemStyle: {
-        fontSize: 18,
-        fontFamily: "System"
+    selectPrice: {
+        flex: 1
     },
-    pickerStyle : {
-        height: 51, 
-        width: 200
+    buttonContainer: {
+        flex: 2
     },
-    labelStyle: {
-        fontFamily: "System",
-        fontSize: 16,
-        fontWeight: "300",
-        color: "#000000", 
-        marginLeft: 0, 
-        paddingLeft: 5, 
-        marginRight: 20
-    },
-    formRests: {
-        flex: Platform.OS === "ios" ? 1 : 2
+    submit: {
+        flex: 1
     },
     submitButtonImage: {
         width: 100,
         height: 100
+    },
+    cancel: {
+        flex: 1,
+        paddingTop: 30
     },
     cancelButtonImage: {
         width: 35,
         height: 35
     }
 });
+
+const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        fontFamily: "System",
+        fontSize: 16,
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: "#555454",
+        borderRadius: 4,
+        color: "#000000",
+        paddingRight: 30,
+        width: 350,
+        height: 50
+        },
+        inputAndroid: {
+        fontSize: 16,
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        borderWidth: 0.5,
+        borderColor: "#555454",
+        borderRadius: 8,
+        color: "#000000",
+        paddingRight: 30,
+        width: 300,
+        height: 50
+    }
+});
+  
 
 export default FilterRestaurants;

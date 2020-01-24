@@ -20,37 +20,40 @@ const Restaurant = props => {
             backdropOpacity={1}
         >
             <View style={styles.container}>
-                <View style={styles.titles}>
+                <View style={styles.headerContainer}>
                     <Header
-                        title={props.restaurant.name} 
+                        header={styles.header}
+                        headerTitle={styles.title}
+                        title={props.restaurant.name}
                     />
-                    <Rating 
-                        rating={props.restaurant.rating} 
-                        text={"Google Rating"} 
-                    />
-                    {props.restaurant.userRating && (<Rating 
-                        rating={props.restaurant.userRating || 0}
-                        text={"Your Rating"}
-                    />)}
+                    <View style={{ height: 80, marginBottom: 10 }}>
+                        <Rating 
+                            rating={props.restaurant.rating} 
+                            text={"Google Rating"} 
+                        />
+                        {props.restaurant.userRating && (<Rating 
+                            rating={props.restaurant.userRating || 0}
+                            text={"Your Rating"}
+                        />)}
+                    </View>
                 </View>
-                <View style={{ flex: props.restaurant.reviews.length ? 3 : 1 }} >
-                    <ScrollView contentContainerStyle={{marginTop: 20}}>
+                <View style={{ flex: props.restaurant.reviews.length ? 3: 1}} >
+                    <ScrollView contentContainerStyle={{ paddingBottom: 20}}>
                         {Review} 
                     </ScrollView>
                 </View>
-                <View style={styles.rateView}>
+                <View style={styles.buttonView}>
                     <ImageButton 
                         imageStyle={styles.rateButtonImage}
                         source={require("../images/rate.png")}
                         onPress={props.openRateModalMode}
                     />
-                </View>
-                <View style={styles.closeView}>
                     <ImageButton 
                         imageStyle={styles.cancelButtonImage}
                         source={require("../images/cancel.png")}
                         onPress={props.hideRestaurantModal}
                     />
+                    
                 </View>
             </View>
         </Modal>
@@ -65,30 +68,32 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%'
     },
-    titles: {
-        flex: 2,
+    headerContainer: {
+        flex: 2
+    },
+    header: {
+        marginBottom: 30
+    },
+    title: {
+        fontFamily: "System",
+        fontSize: 22,
+        fontWeight: "300"
     },
     textRating: {
-        fontSize: 18, 
-        margin: 5
+        fontFamily: "System",
+        fontSize: 16
     },
-    text: {
-        fontSize: 26, 
-        color: "#000000"
-    },
-    rateView: {
-        flex: 1
-    }, 
-    closeView: {
-        flex: 1
+    buttonView: {
+        flex: 2,
+        paddingTop: 30
     },
     rateButtonImage: {
         width: 90, 
         height: 90
     },
     cancelButtonImage: {
-        width: 60,
-        height: 60
+        width: 35,
+        height: 35
     }
 });
 

@@ -18,8 +18,8 @@ const Card = props => {
                 <View style={styles.review}>
                     <View style={styles.rating}>
                         <View style={styles.reviewDataWrapper}>
-                            <View style={{flex:1}}>
-                                <AirbnbRating 
+                            <View style={styles.airbnbRatingContainer}>
+                                <AirbnbRating
                                     showRating={false}
                                     size={15}
                                     isDisabled={true}
@@ -61,10 +61,12 @@ const styles = StyleSheet.create({
     card: {
         flex: 1, 
         flexDirection: "row",
-        borderBottomWidth: 1
+        borderBottomWidth: 1,
+        borderBottomColor: "#555454"
     }, 
     reviewWrapper: {
-        flex: 5
+        flex: 5,
+        paddingTop: 5
     },
     review: {
         flex: 1
@@ -74,16 +76,21 @@ const styles = StyleSheet.create({
         flexDirection: "row", 
         margin: 7
     },
+    airbnbRatingContainer: {
+        flex:1, 
+        alignItems:"flex-start"
+    },
     rating: {
         flex: 1,
         color: "#000000"
     },
     text: {
+        fontFamily: "System",
         fontSize: 18
     },
     description: {
         flex: 1, 
-        paddingLeft: 24, 
+        paddingLeft: 0, 
         margin: 7
     },
     cancelButton: {
